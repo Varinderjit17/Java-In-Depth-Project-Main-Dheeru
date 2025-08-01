@@ -39,7 +39,7 @@ public class Launch {
 	private static void startBookmarking() {
 		System.out.println("\n" + "2. Bookmarking....");
 		for (User user : users) {
-			View.bookmark(user, bookmarks);
+			View.browse(user, bookmarks);
 		}
 	}
 

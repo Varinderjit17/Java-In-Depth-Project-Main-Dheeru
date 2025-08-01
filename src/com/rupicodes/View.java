@@ -1,5 +1,7 @@
 package com.rupicodes;
 
+import com.rupicodes.constants.KidFriendlyStatus;
+import com.rupicodes.constants.UserType;
 import com.rupicodes.controllers.BookmarkController;
 import com.rupicodes.entities.Bookmark;
 import com.rupicodes.entities.User;
@@ -15,5 +17,39 @@ public class View {
             BookmarkController.getInstance().saveUserBookmark(user, bookmark);
             System.out.println(bookmark);
         }
+    }
+
+    public static void browse(User user, Bookmark[][] bookmarks) {
+        System.out.println("\n" + user.getEmail() + "is browsing");
+
+        int bookmarkCount = 0;
+
+        for(Bookmark[] bookmarkList: bookmarks) {
+            for (Bookmark bookmark : bookmarkList) {
+                if (bookmarkCount < DataStore.USER_BOOKMARK_LIMIT) {
+                    boolean isBoomarked = getBookmarkDecision(bookmark);
+                    if(isBoomarked) {
+                        bookmarkCount++;
+                        BookmarkController.getInstance().saveUserBookmark(user, bookmark);
+                        System.out.println("New item bookmarked---- " + bookmark);
+                    }
+                }
+
+                //Mark as kid friendly
+                if(user.getUserType().equals(UserType.CHIEF_EDITOR) || user.getUserType().equals(UserType.EDITOR)) {
+                    if(bookmark.isKidFriendlyEligible() && bookmark.getKidFriendlyStatus().equals(KidFriendlyStatus.UNKNOWN)) {
+                        getKidFriendlyStatusDecision(bookmark);
+                    }
+                }
+            }
+        }
+    }
+
+    private static String getKidFriendlyStatusDecision(Bookmark bookmark) {
+        return null;
+    }
+
+    private static boolean getBookmarkDecision(Bookmark bookmark) {
+        return Math.random() < 0.5 ? true : false;
     }
 }
