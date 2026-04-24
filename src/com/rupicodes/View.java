@@ -5,6 +5,7 @@ import com.rupicodes.constants.UserType;
 import com.rupicodes.controllers.BookmarkController;
 import com.rupicodes.entities.Bookmark;
 import com.rupicodes.entities.User;
+import com.rupicodes.partner.Shareable;
 
 public class View {
     public static void bookmark(User user, Bookmark[][] bookmarks) {
@@ -41,13 +42,28 @@ public class View {
                             && bookmark.getKidFriendlyStatus().equals(KidFriendlyStatus.UNKNOWN)) {
                         String kidFriendlyStatus = getKidFriendlyStatusDecision(bookmark);
                         if (!kidFriendlyStatus.equals(KidFriendlyStatus.UNKNOWN)) {
+                            BookmarkController.getInstance().setKidFriendlyStatus(user, bookmark, kidFriendlyStatus);
                             bookmark.setKidFriendlyStatus(kidFriendlyStatus);
                             System.out.println("Kid friendly status: " + kidFriendlyStatus + "---- " + bookmark);
                         }
                     }
                 }
+
+                // Sharing
+                if (bookmark.getKidFriendlyStatus().equals(KidFriendlyStatus.APPROVED)
+                        && bookmark instanceof Shareable) {
+                    boolean isShared = getShareDecision(bookmark);
+                    if (isShared) {
+                        BookmarkController.getInstance().share(user, bookmark);
+                        System.out.println("New item shared---- " + bookmark);
+                    }
+                }
             }
         }
+    }
+
+    private static boolean getShareDecision(Bookmark bookmark) {
+        return Math.random() < 0.5 ? true : false;
     }
 
     private static String getKidFriendlyStatusDecision(Bookmark bookmark) {

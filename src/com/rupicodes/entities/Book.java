@@ -2,7 +2,9 @@ package com.rupicodes.entities;
 
 import java.util.Arrays;
 
-public class Book extends Bookmark {
+import com.rupicodes.partner.Shareable;
+
+public class Book extends Bookmark implements Shareable {
 	private int publicationYear;
 	private String publisher;
 	private String[] authors;
@@ -58,5 +60,19 @@ public class Book extends Bookmark {
 	@Override
 	public boolean isKidFriendlyEligible() {
 		return false;
+	}
+
+	@Override
+	public String getItemData() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<item>");
+		builder.append("<type> ").append("Book").append("</type>");
+		builder.append("<title> ").append(getTitle()).append("</title>");
+		builder.append("<publisher> ").append(getPublisher()).append("</publisher>");
+		builder.append("<authors> ").append(Arrays.toString(getAuthors())).append("</authors>");
+		builder.append("<genre> ").append(getGenre()).append("</genre>");
+		builder.append("<amazonRating> ").append(getAmazonRating()).append("</amazonRating>");
+		builder.append("</item>");
+		return builder.toString();
 	}
 }
